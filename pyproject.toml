@@ -7,7 +7,7 @@ authors = ["Krzysztof Wiśniewski <argmaster.world@gmail.com>"]
 maintainers = []
 readme = "README.md"
 repository = "https://github.com/Argmaster/eldritch.git"
-documentation = "https://argmaster.github.io/Eldrige/"
+documentation = "https://argmaster.github.io/Eldritch/"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -27,7 +27,5 @@ ptpython = "^3.0.20"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.eldrige]
-gitignore = [
-
-]
+[tool.Eldritch]
+gitignore = []

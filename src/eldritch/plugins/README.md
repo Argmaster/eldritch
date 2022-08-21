@@ -1,3 +1,7 @@
+# eldrich.plugins
+
+This submodule contains builtin Eldrich plugins.
+
 Copyright 2022 Krzysztof Wiśniewski <argmaster.world@gmail.com>
 
 This file is part of Eldritch.
