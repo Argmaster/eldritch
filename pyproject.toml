@@ -21,7 +21,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
-packages = [{ include = "eldrich", from = "src" }]
 include = ["COPYING.md", "COPYING.LESSER.md", "LICENSE.md"]
 
 [tool.poetry.dependencies]
@@ -38,6 +37,7 @@ mkdocs = [
 pytest = "^7.0.0"
 ptpython = "^3.0.20"
 pytest-sugar = "^0.9.5"
+isort = "^5.10.1"
 
 [tool.poetry.scripts]
 eldrich = "eldritch.__main__:main"
@@ -46,5 +46,13 @@ eldrich = "eldritch.__main__:main"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.eldritch]
-gitignore = []
+[tool.isort]
+skip = ["external"]
+profile = "black"
+known_first_party = "eldritch"
+src_paths = ["source/eldritch", "tests"]
+line_length = 79
+
+[tool.eldritch.plugins]
+eldritch.core.isort = true
+eldritch.core.black = true
