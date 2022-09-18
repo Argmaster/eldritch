@@ -1,0 +1,43 @@
+{
+    "python.analysis.indexing": true,
+    "python.autoComplete.extraPaths": ["./src/"],
+    "python.formatting.provider": "black",
+    "python.languageServer": "Pylance",
+    "python.linting.mypyArgs": [
+        "--follow-imports=silent",
+        "--show-column-numbers",
+        "--no-pretty",
+        "--config-file=pyproject.toml"
+    ],
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyCategorySeverity.note": "Warning",
+    "python.linting.pylintEnabled": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "autoDocstring.docstringFormat": "numpy",
+    "autoDocstring.includeName": false,
+    "editor.rulers": [79, 100],
+    "editor.renderWhitespace": "selection",
+    "python.testing.pytestArgs": ["test_unit", "--log-level=DEBUG"],
+    "cSpell.customDictionaries": {
+        "custom-dictionary-user": {
+            "name": "workspace-dictionary",
+            "path": "./.vscode/dictionary.txt",
+            "addWords": true,
+            "scope": "workspace"
+        }
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true,
+        "source.fixAll": true
+    },
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.py$",
+                "cmd": "isort -a 'from __future__ import annotations' source test_unit test_e2e"
+            }
+        ]
+    }
+}

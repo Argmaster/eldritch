@@ -20,10 +20,7 @@ along with Eldritch. If not, see <http://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 from abc import ABCMeta
-from typing import TYPE_CHECKING, Any, Optional, Type
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
+from typing import Any, Optional, Type, TypeVar
 
 
 __all__ = ["SingletonMixin"]
@@ -34,22 +31,22 @@ class _SingletonMeta(ABCMeta):
     __instance__: Optional[_SingletonMeta]
 
     def __new__(
-        cls: type[Self],  # type: ignore
+        cls: Type[_SingletonMeta],
         name: str,
         bases: tuple[type, ...],
         namespace: dict[str, Any],
         **kwargs: Any,
-    ) -> Self:  # type: ignore
-        # Set placeholder for singleton instance
+    ) -> _SingletonMeta:
+        # Set placeholder for singleton instance, otherwise can not be assigned
         namespace["__instance__"] = None
         # Instantiate class object
-        new_class = super().__new__(name, bases, namespace, **kwargs)  # type: ignore
+        new_class = super().__new__(cls, name, bases, namespace, **kwargs)
         # Ensure instance container was correctly set
         assert hasattr(new_class, "__instance__")
-        return new_class  # type: ignore
+        return new_class
 
-    def __call__(  # type: ignore
-        cls: Type[_SingletonMeta],  # type: ignore
+    def __call__(
+        cls: _SingletonMeta,
         *args: Any,
         **kwds: Any,
     ) -> _SingletonMeta:
@@ -68,3 +65,33 @@ class SingletonMixin(  # pylint: disable=too-few-public-methods
     classes inheriting from SingletonMixin must not have custom
     metaclass.
     """
+
+    __instance__: _SingletonMeta
+
+
+NoInstanceAllowedMixinT = TypeVar(
+    "NoInstanceAllowedMixinT", bound="NoInstanceAllowedMixin"
+)
+
+
+class _NoInstanceAllowedMeta(ABCMeta):
+    def __call__(
+        cls: _NoInstanceAllowedMeta, *_: Any, **__: Any
+    ) -> _NoInstanceAllowedMeta:
+        raise AssertionError("No instances allowed.")
+
+
+class NoInstanceAllowedMixin(  # pylint: disable=too-few-public-methods
+    metaclass=_SingletonMeta
+):
+    """This class can be used to forbid creation of instances of class
+    which inherits from this. It makes class work only as a namespace.
+    """
+
+    def __init__(self, *_: Any, **__: Any) -> None:
+        raise AssertionError("No instances allowed.")
+
+    def __new__(
+        cls: Type[NoInstanceAllowedMixinT], *_: Any, **__: Any
+    ) -> NoInstanceAllowedMixinT:
+        raise AssertionError("No instances allowed.")

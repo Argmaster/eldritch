@@ -19,7 +19,22 @@ along with Eldritch. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-from ._mixins import SingletonMixin, NoInstanceAllowedMixin
-from ._cli import EldritchCLI
+from pluggy import HookspecMarker
 
-__all__ = ["SingletonMixin", "NoInstanceAllowedMixin", "EldritchCLI"]
+from eldritch.core import EldritchCLI
+
+hookspec = HookspecMarker("eldritch")
+
+
+@hookspec
+def extend_command_line(
+    cli: EldritchCLI,  # pylint: disable=unused-argument
+) -> None:
+    """This hook is used to collect command line commands. Implementing it
+    allows you to extend command line interface of Eldritch.
+
+    Parameters
+    ----------
+    cli : EldritchCLI
+        Eldritch command line app object.
+    """

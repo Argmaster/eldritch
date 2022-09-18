@@ -1,0 +1,14 @@
+coveragerc
+esbenp
+fmtlib
+googletest
+ipynb
+liveshare
+numpy
+pugixml
+pycache
+Pylance
+pylint
+readwrite
+spdlog
+templating

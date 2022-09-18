@@ -1,5 +1,7 @@
 [tool.poetry]
-# https://python-poetry.org/docs/pyproject/
+# ---------------------------------------------------------------------------- #
+#                   https://python-poetry.org/docs/pyproject/                  #
+# ---------------------------------------------------------------------------- #
 name = "eldritch"
 version = "0.1.0"
 license = "LGPL-3.0-or-later"
@@ -24,17 +26,19 @@ classifiers = [
 ]
 include = ["COPYING.md", "COPYING.LESSER.md", "LICENSE.md"]
 
-# ANCHOR: tool.poetry.dependencies
-[tool.poetry.dependencies]
+[tool.poetry.dependencies] # ANCHOR: tool.poetry.dependencies
 # https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
 python = "^3.8"
 rich = "^12.5.1"
 requests = "^2.28.1"
 pluggy = "^1.0.0"
 typer = "^0.6.1"
+tomlkit = "^0.11.4"
+pydantic = "^1.10.2"
+filelock = "^3.8.0"
+pytest-cov = "^3.0.0"
 
-# ANCHOR: tool.poetry.dev-dependencies
-[tool.poetry.dev-dependencies]
+[tool.poetry.dev-dependencies] # ANCHOR: tool.poetry.dev-dependencies
 # https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
 pytest = "^7.0.0"
 ptpython = "^3.0.20"
@@ -44,38 +48,44 @@ black = "^22.6.0"
 mypy = "^0.971"
 pylint = "^2.14.5"
 
-# ANCHOR: tool.poetry.scripts
-[tool.poetry.scripts]
-# https://python-poetry.org/docs/pyproject/#scripts
+[tool.poetry.scripts] # ANCHOR: tool.poetry.scripts
+# ---------------------------------------------------------------------------- #
+#              https://python-poetry.org/docs/pyproject/#scripts               #
+# ---------------------------------------------------------------------------- #
 eldrich = "eldritch.__main__:main"
 
-# ANCHOR: build-system
-[build-system]
+[build-system] # ANCHOR: build-system
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# ANCHOR: tool.eldritch
-[tool.eldritch.plugins]
-eldritch.core.isort = true
-eldritch.core.black = true
+[tool.eldritch] # ANCHOR: tool.eldritch
+plugins = []
 
-# ANCHOR: tool.isort
-[tool.isort]
-# https://pycqa.github.io/isort/docs/configuration/options.html
+[tool.pytest.ini_options] # ANCHOR: tool.pytest
+minversion = "7.1.0"
+norecursedirs = ["external", "data"]
+python_files = ["test_*.py", "*_test.py"]
+testpaths = ["src/eldritch", "test_unit", "test_e2e"]
+addopts = """ -ra --strict-markers --doctest-modules --log-level=DEBUG --cov-report=term-missing:skip-covered"""
+filterwarnings = []
+
+[tool.isort] # ANCHOR: tool.isort
+# ---------------------------------------------------------------------------- #
+#         https://pycqa.github.io/isort/docs/configuration/options.html        #
+# ---------------------------------------------------------------------------- #
 skip = ["external", ".tox"]
 profile = "black"
 known_first_party = "eldritch"
-src_paths = ["source/eldritch", "tests"]
+src_paths = ["source/eldritch", "test_unit", "test_e2e"]
 line_length = 79
 
-# ANCHOR: tool.black
-[tool.black]
+[tool.black] # ANCHOR: tool.black
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
 line-length = 79
 target-version = ['py38']
 extend-exclude = "(external)"
 
-[tool.mypy]
+[tool.mypy] # ANCHOR: tool.mypy
 # ---------------------------------------------------------------------------- #
 #            https://mypy.readthedocs.io/en/stable/config_file.html            #
 #            https://mypy.readthedocs.io/en/stable/command_line.html           #
@@ -205,8 +215,7 @@ error_summary = true
 # Show absolute paths to files.
 show_absolute_path = true
 
-# ANCHOR: tool.pylint
-[tool.pylint.main]
+[tool.pylint.main] # ANCHOR: tool.pylint.main
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
 # compatible code, which means that the block might have code that exists only in
 # one or another interpreter, leading to false positives when analysed.
@@ -219,7 +228,7 @@ show_absolute_path = true
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code.
-# extension-pkg-allow-list =
+extension-pkg-allow-list = ["pydantic"]
 
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
@@ -292,7 +301,7 @@ suggestion-mode = true
 # active Python interpreter and may run arbitrary code.
 # unsafe-load-any-extension =
 
-[tool.pylint.basic]
+[tool.pylint.basic] # ANCHOR: tool.pylint.basic
 # Naming style matching correct argument names.
 argument-naming-style = "snake_case"
 
@@ -412,7 +421,7 @@ variable-naming-style = "snake_case"
 # style. If left empty, variable names will be checked with the set naming style.
 # variable-rgx =
 
-[tool.pylint.classes]
+[tool.pylint.classes] # ANCHOR: tool.pylint.classes
 # Warn about protected attribute access inside special methods
 # check-protected-access-in-special-methods =
 
@@ -429,7 +438,7 @@ valid-classmethod-first-arg = ["cls"]
 # List of valid names for the first argument in a metaclass class method.
 valid-metaclass-classmethod-first-arg = ["cls"]
 
-[tool.pylint.design]
+[tool.pylint.design] # ANCHOR: tool.pylint.design
 # List of regular expressions of class ancestor names to ignore when counting
 # public methods (see R0903)
 # exclude-too-few-public-methods =
@@ -467,11 +476,11 @@ max-statements = 50
 # Minimum number of public methods for a class (see R0903).
 min-public-methods = 2
 
-[tool.pylint.exceptions]
+[tool.pylint.exceptions] # ANCHOR: tool.pylint.exceptions
 # Exceptions that will emit a warning when caught.
 overgeneral-exceptions = ["BaseException", "Exception"]
 
-[tool.pylint.format]
+[tool.pylint.format] # ANCHOR: tool.pylint.format
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
 # expected-line-ending-format =
 
@@ -498,7 +507,7 @@ max-module-lines = 1000
 # Allow the body of an if to be on the same line as the test if there is no else.
 # single-line-if-stmt =
 
-[tool.pylint.imports]
+[tool.pylint.imports] # ANCHOR: tool.pylint.imports
 # List of modules that can be imported at any level, not just the top level one.
 # allow-any-import-level =
 
@@ -530,16 +539,16 @@ known-third-party = ["enchant"]
 # Couples of modules and preferred modules, separated by a comma.
 # preferred-modules =
 
-[tool.pylint.logging]
+[tool.pylint.logging] # ANCHOR: tool.pylint.logging
 # The type of string formatting that logging methods do. `old` means using %
 # formatting, `new` is for `{}` formatting.
-logging-format-style = "old"
+logging-format-style = "new"
 
 # Logging modules to check that the string format arguments are in logging
 # function parameter format.
 logging-modules = ["logging"]
 
-[tool.pylint."messages control"]
+[tool.pylint."messages control"] # ANCHOR: tool.pylint."messages control"
 # Only show warnings with the listed confidence levels. Leave empty to show all.
 # Valid levels: HIGH, CONTROL_FLOW, INFERENCE, INFERENCE_FAILURE, UNDEFINED.
 confidence = [
@@ -576,14 +585,14 @@ disable = [
 # should appear only once). See also the "--disable" option for examples.
 enable = ["c-extension-no-member"]
 
-[tool.pylint.miscellaneous]
+[tool.pylint.miscellaneous] # ANCHOR: tool.pylint.miscellaneous
 # List of note tags to take in consideration, separated by a comma.
 notes = ["FIXME", "XXX", "TODO"]
 
 # Regular expression of note tags to take in consideration.
 # notes-rgx =
 
-[tool.pylint.refactoring]
+[tool.pylint.refactoring] # ANCHOR: tool.pylint.refactoring
 # Maximum number of nested blocks for function / method body
 max-nested-blocks = 5
 
@@ -592,7 +601,7 @@ max-nested-blocks = 5
 # considered as an explicit return statement and no message will be printed.
 never-returning-functions = ["sys.exit", "argparse.parse_error"]
 
-[tool.pylint.reports]
+[tool.pylint.reports] # ANCHOR: tool.pylint.reports
 # Python expression which should return a score less than or equal to 10. You
 # have access to the variables 'fatal', 'error', 'warning', 'refactor',
 # 'convention', and 'info' which contain the number of messages in each category,
@@ -615,7 +624,7 @@ evaluation = "max(0, 0 if fatal else 10.0 - ((float(5 * error + warning + refact
 # Activate the evaluation score.
 score = true
 
-[tool.pylint.similarities]
+[tool.pylint.similarities] # ANCHOR: tool.pylint.similarities
 # Comments are removed from the similarity computation
 ignore-comments = true
 
@@ -631,7 +640,7 @@ ignore-signatures = true
 # Minimum lines number of a similarity.
 min-similarity-lines = 4
 
-[tool.pylint.spelling]
+[tool.pylint.spelling] # ANCHOR: tool.pylint.spelling
 # Limits count of emitted suggestions for spelling mistakes.
 max-spelling-suggestions = 4
 
@@ -653,16 +662,16 @@ spelling-ignore-comment-directives = "fmt: on,fmt: off,noqa:,noqa,nosec,isort:sk
 # --spelling-private-dict-file option) instead of raising a message.
 # spelling-store-unknown-words =
 
-[tool.pylint.string]
+[tool.pylint.string] # ANCHOR: tool.pylint.string
 # This flag controls whether inconsistent-quotes generates a warning when the
 # character used as a quote delimiter is used inconsistently within a module.
-# check-quote-consistency =
+check-quote-consistency = true
 
 # This flag controls whether the implicit-str-concat should generate a warning on
 # implicit string concatenation in sequences defined over several lines.
-# check-str-concat-over-line-jumps =
+check-str-concat-over-line-jumps = true
 
-[tool.pylint.typecheck]
+[tool.pylint.typecheck] # ANCHOR: tool.pylint.typecheck
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that
 # produce valid context managers.
@@ -723,7 +732,7 @@ mixin-class-rgx = ".*[Mm]ixin"
 # List of decorators that change the signature of a decorated function.
 # signature-mutators =
 
-[tool.pylint.variables]
+[tool.pylint.variables] # ANCHOR: tool.pylint.variables
 # List of additional names supposed to be defined in builtins. Remember that you
 # should avoid defining new builtins when possible.
 # additional-builtins =
