@@ -2,8 +2,10 @@ coveragerc
 esbenp
 fmtlib
 googletest
+hookspecs
 ipynb
 liveshare
+mkfile
 numpy
 pugixml
 pycache

@@ -15,16 +15,43 @@ details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with Eldritch. If not, see <http://www.gnu.org/licenses/>.
-"""
 
+"""
+# pylint: skip-file
 from __future__ import annotations
 
-from typer import Typer
+from typing import TYPE_CHECKING
 
-from eldritch.core import SingletonMixin
+import pluggy
+
+if TYPE_CHECKING:
+    from eldritch.core.context import EldritchContext
+
+NAMESPACE: str = "eldritch"
 
 
-class EldritchCLI(Typer, SingletonMixin):
-    """This class represents Eldritch command line interface.
-    It can be used to add sub commands and alter cli behavior.
-    """
+class EldritchPlugin:
+
+    namespace: str = NAMESPACE
+
+
+class EldritchPluginSpec(EldritchPlugin):
+
+    hookspec = pluggy.HookspecMarker(NAMESPACE)
+
+    @hookspec
+    def on_cli_create_hook(self, ctx: EldritchContext) -> None:
+        """This hook is used to extend command line commands. Implementing it allows you
+        to extend command line interface of Eldritch.
+
+        Parameters
+        ----------
+        ctx : EldritchContext
+            EldritchContext containing command line reference.
+
+        """
+
+
+class EldritchPluginImpl(EldritchPlugin):
+
+    hookimpl = pluggy.HookimplMarker(NAMESPACE)

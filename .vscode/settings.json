@@ -1,6 +1,6 @@
 {
     "python.analysis.indexing": true,
-    "python.autoComplete.extraPaths": ["./src/"],
+    "python.autoComplete.extraPaths": ["src"],
     "python.formatting.provider": "black",
     "python.languageServer": "Pylance",
     "python.linting.mypyArgs": [
@@ -17,9 +17,9 @@
     "python.testing.unittestEnabled": false,
     "autoDocstring.docstringFormat": "numpy",
     "autoDocstring.includeName": false,
-    "editor.rulers": [79, 100],
+    "editor.rulers": [88, 100],
     "editor.renderWhitespace": "selection",
-    "python.testing.pytestArgs": ["test_unit", "--log-level=DEBUG"],
+    "python.testing.pytestArgs": ["test", "src", "--log-level=DEBUG", "-s"],
     "cSpell.customDictionaries": {
         "custom-dictionary-user": {
             "name": "workspace-dictionary",
@@ -36,8 +36,15 @@
         "commands": [
             {
                 "match": "\\.py$",
-                "cmd": "isort -a 'from __future__ import annotations' source test_unit test_e2e"
+                "cmd": ".venv/bin/python -m isort -a 'from __future__ import annotations' src test"
+            },
+            {
+                "match": "\\.py$",
+                "cmd": ".venv/bin/python -m docformatter src -ri"
             }
         ]
-    }
+    },
+    "python.linting.maxNumberOfProblems": 1000,
+    "python.sortImports.path": "isort",
+    "python.analysis.extraPaths": ["src"]
 }

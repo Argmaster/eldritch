@@ -15,13 +15,16 @@ details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with Eldritch. If not, see <http://www.gnu.org/licenses/>.
+
 """
 
 from __future__ import annotations
 
 from abc import ABCMeta
+from pathlib import Path
 from typing import Any, Optional, Type, TypeVar
 
+from .decorators import on_return_mkdir
 
 __all__ = ["SingletonMixin"]
 
@@ -60,10 +63,12 @@ class _SingletonMeta(ABCMeta):
 class SingletonMixin(  # pylint: disable=too-few-public-methods
     metaclass=_SingletonMeta
 ):
-    """This class can be used as mixin class to create singleton
-    design pattern compliant subclasses. You must be aware that
-    classes inheriting from SingletonMixin must not have custom
-    metaclass.
+    """This class can be used as mixin class to create singleton design pattern
+    compliant subclasses.
+
+    You must be a ware that clas ses inhe riti ng from Sing leto nMix in must not have
+    cust om m etac lass .
+
     """
 
     __instance__: _SingletonMeta
@@ -84,8 +89,11 @@ class _NoInstanceAllowedMeta(ABCMeta):
 class NoInstanceAllowedMixin(  # pylint: disable=too-few-public-methods
     metaclass=_SingletonMeta
 ):
-    """This class can be used to forbid creation of instances of class
-    which inherits from this. It makes class work only as a namespace.
+    """This class can be used to forbid creation of instances of class which inherits
+    from this.
+
+    It m akes clas s work only as a name spac e.
+
     """
 
     def __init__(self, *_: Any, **__: Any) -> None:
@@ -95,3 +103,70 @@ class NoInstanceAllowedMixin(  # pylint: disable=too-few-public-methods
         cls: Type[NoInstanceAllowedMixinT], *_: Any, **__: Any
     ) -> NoInstanceAllowedMixinT:
         raise AssertionError("No instances allowed.")
+
+
+class DirsMixin:
+    """This mixin provides getters for commonly referenced paths in project."""
+
+    python_project_dir: Path
+
+    @property
+    def local(self) -> LocalDirs:
+        """This property contains LocalDirs object using path to this project."""
+        return LocalDirs(self.python_project_dir)
+
+
+class LocalDirs:
+    """This mixin provides getters for commonly referenced local paths in project."""
+
+    def __init__(self, python_project_dir: Path) -> None:
+        self._python_project_dir = python_project_dir
+
+    @property
+    @on_return_mkdir
+    def dot_project(self) -> Path:
+        """This property contains path to `.project` folder of Python project."""
+        return self._python_project_dir / ".project"
+
+    @property
+    @on_return_mkdir
+    def scripts(self) -> Path:
+        """This property contains path to `scripts` folder of Python project."""
+        return self._python_project_dir / "scripts"
+
+    @property
+    @on_return_mkdir
+    def docs(self) -> Path:
+        """This property contains path to `docs` folder of Python project."""
+        return self._python_project_dir / "docs"
+
+    @property
+    @on_return_mkdir
+    def test(self) -> Path:
+        """This property contains path to `test` folder of Python project."""
+        return self._python_project_dir / "test"
+
+    @property
+    @on_return_mkdir
+    def test_unit_subdir(self) -> Path:
+        """This property contains path to `test/unit` folder of Python project."""
+        return self._python_project_dir / "test" / "unit"
+
+    @property
+    @on_return_mkdir
+    def test_integration_subdir(self) -> Path:
+        """This property contains path to `test/integration` folder of Python
+        project."""
+        return self._python_project_dir / "test" / "integration"
+
+    @property
+    @on_return_mkdir
+    def test_e2e_subdir(self) -> Path:
+        """This property contains path to `test/e2e` folder of Python project."""
+        return self._python_project_dir / "test" / "e2e"
+
+    @property
+    @on_return_mkdir
+    def src(self) -> Path:
+        """This property contains path to `src` folder of Python project."""
+        return self._python_project_dir / "src"

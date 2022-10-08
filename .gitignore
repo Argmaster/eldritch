@@ -939,3 +939,4 @@ build/
 typechecking/
 \#*
 !.vscode/dictionary.txt
+*.lock
