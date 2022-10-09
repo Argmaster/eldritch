@@ -2,100 +2,83 @@
 # ---------------------------------------------------------------------------- #
 #                   https://python-poetry.org/docs/pyproject/                  #
 # ---------------------------------------------------------------------------- #
-name = "eldritch"
-version = "0.1.0"
-license = "LGPL-3.0-or-later"
-description = "Project manager which I created for personal usage."
-authors = ["Krzysztof Wiśniewski <argmaster.world@gmail.com>"]
-maintainers = ["Krzysztof Wiśniewski <argmaster.world@gmail.com>"]
-readme = "README.md"
-repository = "https://github.com/Argmaster/eldritch.git"
-documentation = "https://argmaster.github.io/Eldritch/"
-keywords = ["python", "development", "eldritch", "cli", "project"]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Environment :: Console",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
-]
-include = ["COPYING", "COPYING.LESSER"]
+# The name of the package. Required
+# This should be a valid name as defined by PEP 508.
+name = {{ metadata.project.name | pprint }}
+# The version of the package. Required
+# This should be a valid PEP 440 string.
+version = {{ metadata.project.version | pprint }}
+# A short description of the package. Required
+description = {{ metadata.project.description | pprint }}
+# The license of the package. See https://spdx.org/licenses/
+license = {{ metadata.project.license | pprint }}
+# The authors of the package. Required
+# This is a list of authors and should contain at least one author. Authors must be in
+# the form name <email>.
+authors = {{ metadata.project.authors | pprint }}
+# The maintainers of the package. Optional
+# This is a list of maintainers and should be distinct from authors. Maintainers may
+# contain an email and be in the form name <email>.
+maintainers = {{ metadata.project.maintainers | pprint }}
+# A path, or list of paths corresponding to the README file(s) of the package. Optional
+# Refer to: https://python-poetry.org/docs/pyproject/#readme
+readme = {{ metadata.project.readme | pprint }}
+# An URL to the website of the project. Optional
+repository = {{ metadata.project.repository | pprint }}
+# An URL to the repository of the project. Optional
+homepage = {{ metadata.project.homepage | pprint }}
+# An URL to the documentation of the project. Optional
+documentation = {{ metadata.project.documentation | pprint }}
+keywords = []
+classifiers = []
+include = []
 
 [tool.poetry.dependencies] # ANCHOR: tool.poetry.dependencies
 # https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
 python = "^3.8"
-rich = "^12.5.1"
-requests = "^2.28.1"
-pluggy = "^1.0.0"
-tomlkit = "^0.11.4"
-pydantic = "^1.10.2"
-filelock = "^3.8.0"
-pytest-cov = "^3.0.0"
-click = "^8.1.3"
-rich-click = "^1.5.2"
-Jinja2 = "^3.1.2"
-inquirer = "^2.10.0"
 
 [tool.poetry.group.dev.dependencies] # ANCHOR: tool.poetry.dev-dependencies
 # https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
-pytest = "^7.0.0"
-ptpython = "^3.0.20"
-pytest-sugar = "^0.9.5"
-isort = "^5.10.1"
-black = "^22.6.0"
-pylint = "^2.14.5"
-docformatter = "^1.5.0"
-mypy = "^0.981"
 
 [tool.poetry.scripts] # ANCHOR: tool.poetry.scripts
 # ---------------------------------------------------------------------------- #
 #              https://python-poetry.org/docs/pyproject/#scripts               #
 # ---------------------------------------------------------------------------- #
-eldritch = "eldritch.commands:eldritch"
-render = "eldritch.commands:render"
 
 [build-system] # ANCHOR: build-system
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.eldritch] # ANCHOR: tool.eldritch
-plugins = ["eldritch.plugins.license"]
-
+{% if metadata.tools.pytest %}
 [tool.pytest.ini_options] # ANCHOR: tool.pytest
 minversion = "7.1.0"
 norecursedirs = ["external", "data"]
-python_files = ["test_*.py", "*_test.py"]
-testpaths = ["src/eldritch", "test"]
+python_files = ["test_*.py"]
+testpaths = ["src/{{ metadata.project.name }}", "test"]
 addopts = """ -ra --strict-markers --doctest-modules --log-level=DEBUG --cov-report=term-missing:skip-covered"""
 filterwarnings = []
-
+{% endif %}{% if metadata.tools.isort %}
 [tool.isort] # ANCHOR: tool.isort
 # ---------------------------------------------------------------------------- #
 #         https://pycqa.github.io/isort/docs/configuration/options.html        #
 # ---------------------------------------------------------------------------- #
 skip = ["external", ".tox"]
-profile = "black"
-known_first_party = "eldritch"
-src_paths = ["source/eldritch", "test_unit", "test_e2e"]
-line_length = 88
-
+{% if metadata.tools.black %}profile = "black"{% endif %}
+known_first_party = {{ metadata.project.name | pprint }}
+src_paths = ["src/{{ metadata.project.name }}", "test"]
+line_length = {{ metadata.format.line_width }}
+{% endif %}{% if metadata.tools.black %}
 [tool.black] # ANCHOR: tool.black
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-format
-line-length = 88
+line-length = {{ metadata.format.line_width }}
 target-version = ['py38']
 extend-exclude = "(external)"
-
+{% endif %}{% if metadata.tools.docformatter %}
 [tool.docformatter]
 recursive = true
-wrap-summaries = 88
-wrap-descriptions = 88
+wrap-summaries = {{ metadata.format.line_width }}
+wrap-descriptions = {{ metadata.format.line_width }}
 blank = true
-
+{% endif %}{% if metadata.tools.mypy %}
 [tool.mypy] # ANCHOR: tool.mypy
 # ---------------------------------------------------------------------------- #
 #            https://mypy.readthedocs.io/en/stable/config_file.html            #
@@ -225,7 +208,7 @@ color_output = true
 error_summary = true
 # Show absolute paths to files.
 show_absolute_path = true
-
+{% endif %}{% if metadata.tools.pylint %}
 [tool.pylint.main] # ANCHOR: tool.pylint.main
 # Analyse import fallback blocks. This can be used to support both Python 2 and 3
 # compatible code, which means that the block might have code that exists only in
@@ -263,7 +246,7 @@ fail-under = 10
 ignore = ["CVS"]
 
 # Add files or directories matching the regex patterns to the ignore-list. The
-# regex matches against paths and can be in Posix or Windows format.
+# regex matches against paths and can be in Posix or Windows metadata.format.
 # ignore-paths =
 
 # Files or directories matching the regex patterns are skipped. The regex matches
@@ -513,17 +496,17 @@ indent-after-paren = 4
 indent-string = "    "
 
 # Maximum number of characters on a single line.
-max-line-length = 88
+max-line-length = {{ metadata.format.line_width }}
 
 # Maximum number of lines in a module.
 max-module-lines = 3000
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
-# single-line-class-stmt =
+# single-line-class-stmt
 
 # Allow the body of an if to be on the same line as the test if there is no else.
-# single-line-if-stmt =
+# single-line-if-stmt
 
 [tool.pylint.imports] # ANCHOR: tool.pylint.imports
 # List of modules that can be imported at any level, not just the top level one.
@@ -563,7 +546,7 @@ known-third-party = ["enchant"]
 logging-format-style = "new"
 
 # Logging modules to check that the string format arguments are in logging
-# function parameter format.
+# function parameter metadata.format.
 logging-modules = ["logging"]
 
 [tool.pylint."messages control"] # ANCHOR: tool.pylint."messages control"
@@ -605,7 +588,7 @@ enable = ["c-extension-no-member"]
 
 [tool.pylint.miscellaneous] # ANCHOR: tool.pylint.miscellaneous
 # List of note tags to take in consideration, separated by a comma.
-notes = ["FIXME", "XXX", "TODO"]
+notes = ["FIXME", "ANCHOR", "TODO", "NOTE"]
 
 # Regular expression of note tags to take in consideration.
 # notes-rgx =
@@ -631,7 +614,7 @@ evaluation = "max(0, 0 if fatal else 10.0 - ((float(5 * error + warning + refact
 # used to format the message information. See doc for all details.
 # msg-template =
 
-# Set the output format. Available formats are text, parseable, colorized, json
+# Set the output metadata.format. Available formats are text, parseable, colorized, json
 # and msvs (visual studio). You can also give a reporter class, e.g.
 # mypackage.mymodule.MyReporterClass.
 # output-format =
@@ -785,4 +768,4 @@ redefining-builtins-modules = [
     "future.builtins",
     "builtins",
     "io",
-]
+]{% endif %}

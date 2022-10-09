@@ -46,5 +46,6 @@
     },
     "python.linting.maxNumberOfProblems": 1000,
     "python.sortImports.path": "isort",
-    "python.analysis.extraPaths": ["src"]
+    "python.analysis.extraPaths": ["src"],
+    "python.analysis.diagnosticMode": "workspace"
 }

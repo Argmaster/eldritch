@@ -1,0 +1,48 @@
+[project]
+# -------------------------------------------------------------------------------------
+#  Some of descriptions and example values come from poetry documentation
+#  https://python-poetry.org/docs/pyproject/
+# -------------------------------------------------------------------------------------
+# The name of the package. Required
+# This should be a valid name as defined by PEP 508.
+name = "<project name>"
+# The version of the package. Required
+# This should be a valid PEP 440 string.
+version = "0.0.0"
+# A short description of the package. Required
+description = ""
+# The license of the package. See https://spdx.org/licenses/
+license = "MIT"
+# The authors of the package. Required
+# This is a list of authors and should contain at least one author. Authors must be in
+# the form name <email>.
+authors = ["Sébastien Eustace <sebastien@eustace.io>"]
+# The maintainers of the package. Optional
+# This is a list of maintainers and should be distinct from authors. Maintainers may
+# contain an email and be in the form name <email>.
+maintainers = [
+    "John Smith <johnsmith@example.org>",
+    "Jane Smith <janesmith@example.org>",
+]
+# A path, or list of paths corresponding to the README file(s) of the package. Optional
+# Refer to: https://python-poetry.org/docs/pyproject/#readme
+readme = "README.md"
+# An URL to the website of the project. Optional
+homepage = "https://python-poetry.org/"
+# An URL to the repository of the project. Optional
+repository = "https://github.com/python-poetry/poetry"
+# An URL to the documentation of the project. Optional
+documentation = "https://python-poetry.org/docs/"
+
+[format]
+line_width = 88
+
+[tools]
+# Controls which tools configuration should be included in base template
+# set to true to enable config section, false to disable
+pytest = true
+isort = true
+black = true
+docformatter = true
+mypy = true
+pylint = true
